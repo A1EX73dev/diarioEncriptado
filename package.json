@@ -40,17 +40,17 @@
   "devDependencies": {
     "@axe-core/playwright": "4.14.1",
     "@playwright/test": "1.65.1",
-    "@tailwindcss/turbopack": "4.3.3",
-    "@types/node": "^20",
+    "@tailwindcss/turbopack": "4.3.5",
+    "@types/node": "^26",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
+    "eslint": "^10",
     "eslint-config-next": "16.4.6",
     "prettier": "3.10.1",
     "supabase": "3.4.0",
-    "tailwindcss": "4.3.3",
-    "typescript": "^5",
-    "vitest": "4.1.12"
+    "tailwindcss": "4.3.5",
+    "typescript": "^7",
+    "vitest": "5.1.1"
   },
   "engines": {
     "node": ">=20.9"
