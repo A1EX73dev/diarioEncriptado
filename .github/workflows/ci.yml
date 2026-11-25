@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Mínimo privilegio: el workflow solo lee el repositorio.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "24"
+
+jobs:
+  calidad:
+    name: Lint, tipos, formato, tests unitarios y auditoría
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      # npm ci respeta el lockfile exacto.
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run format:check
+      - run: npm test
+      - run: npm audit --audit-level=high
+
+  integracion:
+    name: Base de datos (pgTAP), integración y E2E
+    needs: calidad
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Arrancar Supabase local (Docker)
+        run: npx supabase start
+      - name: Generar .env.local con las claves locales
+        run: node scripts/write-env.mjs
+      - run: npm run test:db
+      - run: npm run test:integration
+      - name: Instalar Chromium para Playwright
+        run: npx playwright install --with-deps chromium
+      # Compila el build de producción y lo prueba con la CSP real.
+      - run: npm run test:e2e
+      - name: Informe de Playwright
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+      - name: Parar Supabase
+        if: always()
+        run: npx supabase stop --no-backup

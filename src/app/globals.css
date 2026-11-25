@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+/*
+ * Paleta "cuaderno privado". Un único acento: tinta azul de estilográfica.
+ * Modo claro por defecto; oscuro si el sistema lo prefiere, salvo que el
+ * usuario haya elegido otro en el selector (atributo data-theme en <html>).
+ */
+:root {
+  color-scheme: light;
+  --bg: #f7f4ee;
+  --surface: #fffdf9;
+  --surface-sunken: #efebe3;
+  --border: #ddd6ca;
+  --border-strong: #8c8478;
+  --text: #1f1d1a;
+  --text-muted: #5e584f;
+  --accent: #35468c;
+  --accent-hover: #2a386f;
+  --on-accent: #ffffff;
+  --danger: #a3302a;
+  --danger-surface: #f8e9e6;
+  --success: #2f6237;
+  --success-surface: #e7f0e6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #16171b;
+    --surface: #1e2026;
+    --surface-sunken: #262931;
+    --border: #343842;
+    --border-strong: #6e7380;
+    --text: #ece8e1;
+    --text-muted: #a9a49b;
+    --accent: #9daef0;
+    --accent-hover: #b8c5f5;
+    --on-accent: #16171b;
+    --danger: #f08a80;
+    --danger-surface: #3a2224;
+    --success: #8fc99a;
+    --success-surface: #1f3224;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #16171b;
+  --surface: #1e2026;
+  --surface-sunken: #262931;
+  --border: #343842;
+  --border-strong: #6e7380;
+  --text: #ece8e1;
+  --text-muted: #a9a49b;
+  --accent: #9daef0;
+  --accent-hover: #b8c5f5;
+  --on-accent: #16171b;
+  --danger: #f08a80;
+  --danger-surface: #3a2224;
+  --success: #8fc99a;
+  --success-surface: #1f3224;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-danger: var(--danger);
+  --color-danger-surface: var(--danger-surface);
+  --color-success: var(--success);
+  --color-success-surface: var(--success-surface);
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-literata), ui-serif, Georgia, serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Foco siempre visible con teclado, con anillo del color de acento y separación. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Tipografía de lectura de las entradas (Markdown ya saneado). */
+.prose-diario > * + * {
+  margin-top: 0.9em;
+}
+.prose-diario h1,
+.prose-diario h2,
+.prose-diario h3,
+.prose-diario h4 {
+  font-weight: 600;
+  line-height: 1.25;
+  margin-top: 1.4em;
+}
+.prose-diario h1 {
+  font-size: 1.6em;
+}
+.prose-diario h2 {
+  font-size: 1.35em;
+}
+.prose-diario h3 {
+  font-size: 1.15em;
+}
+.prose-diario ul {
+  list-style: disc;
+  padding-left: 1.4em;
+}
+.prose-diario ol {
+  list-style: decimal;
+  padding-left: 1.4em;
+}
+.prose-diario blockquote {
+  border-left: 3px solid var(--border-strong);
+  padding-left: 1em;
+  color: var(--text-muted);
+  font-style: italic;
+}
+.prose-diario code {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 0.85em;
+  background: var(--surface-sunken);
+  border-radius: 4px;
+  padding: 0.1em 0.3em;
+}
+.prose-diario pre {
+  background: var(--surface-sunken);
+  border-radius: 6px;
+  padding: 0.8em 1em;
+  overflow-x: auto;
+}
+.prose-diario pre code {
+  background: none;
+  padding: 0;
+}
+.prose-diario hr {
+  border-color: var(--border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

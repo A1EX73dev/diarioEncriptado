@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="es">
+  <body style="font-family: Georgia, serif; color: #1f1d1a; background: #f7f4ee; padding: 24px">
+    <h1 style="font-weight: normal">Confirma tu cuenta del Diario cifrado</h1>
+    <p>Para activar tu cuenta, abre este enlace:</p>
+    <p>
+      <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email">Confirmar mi correo</a>
+    </p>
+    <p style="color: #5e584f; font-size: 14px">
+      Si no has creado esta cuenta, ignora este mensaje. Nunca te pediremos tu contraseña ni tu frase secreta por
+      correo.
+    </p>
+  </body>
+</html>

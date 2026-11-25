@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="es">
+  <body style="font-family: Georgia, serif; color: #1f1d1a; background: #f7f4ee; padding: 24px">
+    <h1 style="font-weight: normal">Elige una contraseña nueva</h1>
+    <p>
+      Has pedido recuperar el acceso a tu cuenta del Diario cifrado. Abre este enlace para elegir una contraseña nueva:
+    </p>
+    <p>
+      <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/nueva-contrasena"
+        >Elegir una contraseña nueva</a
+      >
+    </p>
+    <p style="color: #5e584f; font-size: 14px">
+      Esto no cambia tu frase secreta del diario: tus entradas siguen cifradas con ella. Si no lo has pedido tú, ignora
+      este mensaje.
+    </p>
+  </body>
+</html>
