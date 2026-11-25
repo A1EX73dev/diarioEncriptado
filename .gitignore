@@ -51,3 +51,8 @@ next-env.d.ts
 
 # herramientas locales del editor/agente
 /.claude/
+
+# diario personal local (configuración generada, secretos y copias)
+/.diario-local/
+/.next-diario/
+/copias/

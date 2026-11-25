@@ -7,3 +7,6 @@ supabase/.temp
 src/lib/supabase/database.types.ts
 test-results
 playwright-report
+.diario-local
+.next-diario
+copias

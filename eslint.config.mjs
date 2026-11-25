@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Build y configuración generada del diario personal (scripts/diario.mjs).
+    ".next-diario/**",
+    ".diario-local/**",
   ]),
 ]);
 

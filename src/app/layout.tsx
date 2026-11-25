@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Literata } from "next/font/google";
 import { cookies } from "next/headers";
+import { SiteFooter } from "@/components/SiteFooter";
 import { parseTheme, THEME_COOKIE } from "@/lib/theme";
 import "./globals.css";
 
@@ -34,6 +35,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           Saltar al contenido
         </a>
         {children}
+        <SiteFooter />
       </body>
     </html>
   );

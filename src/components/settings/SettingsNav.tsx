@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const LINKS = [
   { href: "/ajustes", label: "Seguridad" },
   { href: "/ajustes/datos", label: "Exportar e importar" },
+  { href: "/ajustes/cuenta", label: "Cuenta" },
 ] as const;
 
 export function SettingsNav() {

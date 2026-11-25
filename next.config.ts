@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
   // Next.js indica que el prerenderizado parcial es incompatible con nonces.
   cacheComponents: false,
   poweredByHeader: false,
+  // El diario personal (scripts/diario.mjs) compila en otra carpeta para no chocar con los tests.
+  distDir: process.env.NEXT_DIST_DIR ?? ".next",
   // Sin mapas de código en el navegador en producción.
   productionBrowserSourceMaps: false,
   async headers() {

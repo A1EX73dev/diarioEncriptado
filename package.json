@@ -20,7 +20,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test:e2e": "playwright test",
-    "env:local": "node scripts/write-env.mjs"
+    "env:local": "node scripts/write-env.mjs",
+    "diario": "node scripts/diario.mjs iniciar",
+    "diario:parar": "node scripts/diario.mjs parar",
+    "diario:copia": "node scripts/diario.mjs copia",
+    "diario:restaurar": "node scripts/diario.mjs restaurar"
   },
   "dependencies": {
     "@scure/bip39": "2.4.0",

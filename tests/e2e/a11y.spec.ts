@@ -24,7 +24,7 @@ for (const scheme of ["light", "dark"] as const) {
     test.setTimeout(120_000);
     await page.emulateMedia({ colorScheme: scheme, reducedMotion: "reduce" });
 
-    for (const path of ["/", "/login", "/registro", "/recuperar-contrasena"]) {
+    for (const path of ["/", "/login", "/registro", "/recuperar-contrasena", "/privacidad"]) {
       await page.goto(path);
       await expectNoViolations(page, path);
     }
@@ -57,6 +57,9 @@ for (const scheme of ["light", "dark"] as const) {
     await page.getByRole("link", { name: "Exportar e importar" }).click();
     await expect(page.getByRole("button", { name: "Descargar copia cifrada" })).toBeVisible();
     await expectNoViolations(page, "datos");
+    await page.getByRole("link", { name: "Cuenta" }).click();
+    await expect(page.getByRole("heading", { name: "Borrar la cuenta" })).toBeVisible();
+    await expectNoViolations(page, "cuenta");
 
     await page.goto("/diario");
     await expect(page.getByRole("heading", { name: "Desbloquear el diario" })).toBeVisible();
