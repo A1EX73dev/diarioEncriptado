@@ -7,9 +7,11 @@
  * tocan la instancia de desarrollo ("diarioEncriptado", puertos 5432x), así que
  * nunca pueden borrar ni ensuciar tu diario real.
  *
- *   npm run diario              arranca Supabase personal, aplica migraciones nuevas,
- *                               compila y sirve la app en http://localhost:3500
- *   npm run diario -- --sin-compilar   igual, reutilizando el último build
+ *   npm run diario              arranca Supabase personal, aplica migraciones nuevas y
+ *                               sirve la app en http://localhost:3500. Compila solo si no
+ *                               hay build o el código ha cambiado desde el último.
+ *   npm run diario -- --compilar       fuerza la compilación
+ *   npm run diario -- --sin-compilar   nunca compila (reutiliza el último build)
  *   npm run diario:parar        para Supabase personal (los datos se conservan)
  *   npm run diario:copia        copia de seguridad SQL en ./copias/
  *   npm run diario:restaurar -- copias/archivo.sql   restaura una copia (pide confirmación)
@@ -29,6 +31,7 @@ const APP_PORT = 3500;
 const ENV_FILE = join(WORKDIR, ".env.diario");
 const DIST_DIR = ".next-diario";
 const BACKUP_DIR = "copias";
+const BUILD_STAMP = join(DIST_DIR, ".version-codigo");
 
 const run = (command, options = {}) => execSync(command, { stdio: "inherit", ...options });
 const supabase = (args, options) => run(`npx supabase ${args} --workdir ${WORKDIR}`, options);
@@ -99,6 +102,34 @@ function appEnv() {
   return env;
 }
 
+/** Versión del código: commit actual, o null si hay cambios sin commit (entonces siempre se compila). */
+function codeVersion() {
+  try {
+    const opts = { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] };
+    if (execSync("git status --porcelain", opts).trim()) return null;
+    return execSync("git rev-parse HEAD", opts).trim();
+  } catch {
+    return null;
+  }
+}
+
+function needsBuild() {
+  if (process.argv.includes("--compilar")) return true;
+  if (process.argv.includes("--sin-compilar")) return false;
+  if (!existsSync(join(DIST_DIR, "BUILD_ID")) || !existsSync(BUILD_STAMP)) return true;
+  const version = codeVersion();
+  return version === null || readFileSync(BUILD_STAMP, "utf8").trim() !== version;
+}
+
+async function isAppRunning() {
+  try {
+    const response = await fetch(`http://localhost:${APP_PORT}/login`, { signal: AbortSignal.timeout(2_000) });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
 async function start() {
   syncConfig();
   console.log("\n▸ Arrancando Supabase personal (la primera vez tarda unos minutos)…");
@@ -107,9 +138,17 @@ async function start() {
   supabase("migration up");
   // Las variables se pasan explícitamente: tienen prioridad sobre .env.local (que apunta a desarrollo).
   const env = { ...process.env, ...appEnv(), NEXT_DIST_DIR: DIST_DIR, NODE_ENV: "production" };
-  if (!process.argv.includes("--sin-compilar")) {
-    console.log("\n▸ Compilando la app…");
+  if (await isAppRunning()) {
+    console.log(`\n✔ El diario ya está en marcha en http://localhost:${APP_PORT}`);
+    return;
+  }
+  if (needsBuild()) {
+    console.log("\n▸ Compilando la app (solo cuando cambia el código; tarda un minuto)…");
     run("npx next build", { env });
+    const version = codeVersion();
+    if (version) writeFileSync(BUILD_STAMP, version);
+  } else {
+    console.log("\n▸ Sin cambios en el código: se usa el último build.");
   }
   console.log(`\n▸ Diario en http://localhost:${APP_PORT}  (Ctrl+C para parar la app)`);
   console.log(`  Correos de confirmación: http://127.0.0.1:55324\n`);

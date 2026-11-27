@@ -173,6 +173,12 @@ Migraciones en [supabase/migrations](supabase/migrations) y tests de RLS en [sup
 
 ### Uso diario
 
+**Para empezar:** instala los requisitos, descarga el proyecto (`git clone https://github.com/A1EX73dev/diarioEncriptado.git` o, en GitHub, _Code → Download ZIP_ y descomprímelo) y sigue uno de los dos caminos de abajo.
+
+**Con doble clic (Windows):** abre `Diario.cmd`, o un acceso directo a él en el escritorio. Abre Docker Desktop si hace falta y espera a que arranque, instala las dependencias la primera vez, arranca el diario y abre el navegador. Cierra la ventana para parar la app. `Parar diario.cmd` apaga también la base de datos, conservando los datos.
+
+**Desde la terminal:**
+
 ```powershell
 npm ci
 ```
@@ -183,10 +189,12 @@ npm run diario
 
 La primera vez descarga las imágenes de Docker y tarda unos minutos. Después abre **http://localhost:3500**, crea tu cuenta y confirma el correo en **http://127.0.0.1:55324**: los correos no salen de tu equipo.
 
+La app solo se vuelve a compilar si no hay build o si el código ha cambiado (otro commit o cambios sin commit); así el arranque diario tarda unos segundos.
+
 | Orden                                            | Qué hace                                                                                                             |
 | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
-| `npm run diario`                                 | Arranca Supabase personal, aplica las migraciones nuevas **sin borrar datos**, compila y sirve la app.               |
-| `npm run diario -- --sin-compilar`               | Igual, reutilizando el último build.                                                                                 |
+| `npm run diario`                                 | Arranca Supabase personal, aplica las migraciones nuevas **sin borrar datos**, compila si hace falta y sirve la app. |
+| `npm run diario -- --compilar`                   | Igual, forzando la compilación.                                                                                      |
 | `npm run diario:parar`                           | Para Supabase personal. **Los datos se conservan.**                                                                  |
 | `npm run diario:copia`                           | Guarda una copia SQL en `copias/`. Las entradas van cifradas; la copia incluye tu correo y el hash de tu contraseña. |
 | `npm run diario:restaurar -- copias/archivo.sql` | Sustituye los datos actuales por la copia. Pide escribir `RESTAURAR`.                                                |

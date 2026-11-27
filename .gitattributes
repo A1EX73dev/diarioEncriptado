@@ -2,3 +2,5 @@
 * text=auto eol=lf
 *.png binary
 *.ico binary
+# Los lanzadores de Windows necesitan CRLF.
+*.cmd text eol=crlf
