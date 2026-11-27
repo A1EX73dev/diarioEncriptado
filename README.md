@@ -10,6 +10,86 @@ Está pensado para **usarse en local**, en tu propio equipo, con Next.js y Supab
 | ------------------------------------------------------------------------ | ------------------------------------------------------------------ | -------------------------------------------------------------- |
 | ![Lista bloqueada con fragmentos cifrados](docs/img/bloqueado-claro.png) | ![Lista descifrada con búsqueda](docs/img/desbloqueado-oscuro.png) | ![Entrada descifrada con Markdown](docs/img/lectura-claro.png) |
 
+## Guía de uso
+
+### 1. Instala los requisitos (una sola vez)
+
+- **[Node.js](https://nodejs.org/)** 24 LTS (sirve desde la 20.9). Instálalo con las opciones por defecto.
+- **[Docker Desktop](https://www.docker.com/products/docker-desktop/)** con WSL 2. Ábrelo una vez y acepta sus condiciones para que quede listo.
+- **[Git](https://git-scm.com/)** (recomendado). Sin Git también funciona, pero la app se recompila en cada arranque y tarda más.
+
+### 2. Descarga el diario
+
+```powershell
+git clone https://github.com/A1EX73dev/diarioEncriptado.git
+```
+
+Sin Git: en GitHub, pulsa _Code → Download ZIP_ y descomprímelo en una carpeta que no vayas a borrar.
+
+### 3. Arranca el diario
+
+Haz doble clic en **`Diario.cmd`**, dentro de la carpeta del proyecto. Si quieres, crea un acceso directo en el escritorio (clic derecho → _Enviar a → Escritorio_).
+
+El lanzador abre Docker Desktop si no está abierto, instala lo necesario y abre **http://localhost:3500** en el navegador. **La primera vez tarda varios minutos**, porque descarga las imágenes de Docker y compila la app. Después arranca en segundos.
+
+Deja abierta la ventana negra mientras uses el diario.
+
+### 4. Crea tu cuenta
+
+1. En la app, pulsa **Crear cuenta** y elige un correo y una contraseña.
+2. Abre **http://127.0.0.1:55324**. Es un buzón local: el correo de confirmación llega ahí y **no sale de tu equipo**, así que no hace falta que el correo exista.
+3. Pulsa el enlace del correo e inicia sesión.
+
+### 5. Configura el diario
+
+La primera vez la app te guía para:
+
+1. **Elegir una frase secreta**, distinta de la contraseña. Es la que cifra tus entradas. Debe tener al menos 12 caracteres y el medidor debe indicar que es fuerte. Un truco: varias palabras al azar.
+2. **Guardar la clave de recuperación de 24 palabras.** Cópiala o descárgala y guárdala fuera del ordenador (en papel o en un gestor de contraseñas). La app te pide algunas palabras para comprobar que la has guardado.
+
+> ⚠️ Si pierdes **la frase y la clave de recuperación**, tus entradas no se pueden recuperar. Nadie puede hacerlo por ti.
+
+### 6. Escribe
+
+- **Desbloquear:** cada vez que entres, escribe tu frase secreta. Hasta entonces solo ves fechas y texto cifrado.
+- **Nueva entrada:** título, texto en Markdown (negritas, listas, enlaces…), estado de ánimo y etiquetas. Tiene vista previa.
+- **Buscar y filtrar** por texto, etiqueta, ánimo o fechas, o usar la **vista de calendario**.
+- **Bloquear:** pulsa «Bloquear» al terminar. El diario también se bloquea si recargas la página o pasa un rato sin actividad (se cambia en _Ajustes_).
+
+### 7. Haz copias de seguridad
+
+Ve a **Ajustes → Exportar e importar** y descarga una **copia cifrada** de vez en cuando. Guárdala fuera del equipo: si se borra Docker o su volumen de datos, el diario desaparece. La copia se abre con la frase que tenías al exportarla.
+
+### 8. Cierra el diario
+
+- Cierra la ventana negra para parar la app.
+- Para apagar también la base de datos y liberar memoria, haz doble clic en **`Parar diario.cmd`**. Tus entradas se conservan.
+
+### Si olvidas algo
+
+| Olvidaste…                  | Qué hacer                                                                                                                             |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| La **contraseña** de cuenta | En el inicio de sesión, «He olvidado la contraseña». El correo llega a http://127.0.0.1:55324. Tus entradas no se pierden.            |
+| La **frase secreta**        | En la pantalla de desbloqueo, «He olvidado la frase: usar la clave de recuperación». Escribe las 24 palabras y elige una frase nueva. |
+| La frase **y** la clave     | No hay forma de recuperar las entradas.                                                                                               |
+
+### Actualizar a una versión nueva
+
+```powershell
+git pull
+```
+
+Después abre `Diario.cmd` como siempre. La app se recompila y aplica los cambios de la base de datos **sin borrar tus entradas**. Si descargaste el ZIP, descarga el nuevo y copia dentro la carpeta `copias/` si la tenías; los datos del diario viven en Docker, no en la carpeta.
+
+### Problemas frecuentes
+
+- **«No se ha podido arrancar Docker»:** abre Docker Desktop a mano, espera a que indique _Engine running_ y vuelve a abrir `Diario.cmd`.
+- **«npm» no se reconoce:** falta Node.js o hay que reiniciar el equipo tras instalarlo.
+- **El navegador no se abre:** entra tú en http://localhost:3500 cuando la ventana negra muestre «Diario en http://localhost:3500».
+- **Otro programa usa el puerto 3500 o 5532x:** ciérralo y vuelve a intentarlo.
+
+Sin Windows, usa las órdenes de [Uso local](#uso-local).
+
 ## Cómo funciona
 
 El acceso tiene **dos pasos**:
@@ -173,11 +253,7 @@ Migraciones en [supabase/migrations](supabase/migrations) y tests de RLS en [sup
 
 ### Uso diario
 
-**Para empezar:** instala los requisitos, descarga el proyecto (`git clone https://github.com/A1EX73dev/diarioEncriptado.git` o, en GitHub, _Code → Download ZIP_ y descomprímelo) y sigue uno de los dos caminos de abajo.
-
-**Con doble clic (Windows):** abre `Diario.cmd`, o un acceso directo a él en el escritorio. Abre Docker Desktop si hace falta y espera a que arranque, instala las dependencias la primera vez, arranca el diario y abre el navegador. Cierra la ventana para parar la app. `Parar diario.cmd` apaga también la base de datos, conservando los datos.
-
-**Desde la terminal:**
+En Windows basta con `Diario.cmd` (ver [Guía de uso](#guía-de-uso)). Desde la terminal, en cualquier sistema:
 
 ```powershell
 npm ci
